@@ -1,7 +1,7 @@
 Start the Game:
   1. Click the answer you think is correct on the trivia card!
   2. If you got it correct you will be able to roll the die (by clicking it) to move forward; otherwise you will forfeit your turn and the game will progress without you!
-  3. Continue play until someone wins!
+  3. Continue play until someone wins by getting to the last tile!
 Tiles:
   1. Plains: Nothing! Just a normal / default tile.
   2. Forest: Due to difficult terrain, you will move 1 tile slower than normal if starting on this tile!
