@@ -13,6 +13,10 @@ class Vector2 {
     add(that) {
         return new Vector2(this.x + that.x, this.y + that.y)
     }
+
+    multiply(that) {
+        return new Vector2(this.x * that, this.y * that)
+    }
 }
 
 let dice = {
@@ -28,7 +32,8 @@ let dice = {
 let die = {
     state: 0,
     value: 0,
-    rolling: false
+    rolling: false,
+    canRoll: false
 }
 
 dice[0].src = `Images/0.png`
@@ -96,26 +101,30 @@ function askQuestion() {
     return questions[Math.floor(Math.random() * questions.length)]
 }
 
-let questions = [
-    'When was Canada born?',
-    'True or false: the underground railroad was an actual underground railroad?',
-    'What was a symbolic term representing the monarch of Britain?',
-    'What was the term for the highest social class?',
-    'Where did people race to for the gold rush?',
-    'What does Yukon mean?',
-    'What was the capital of Yukon before Whitehorse?',
-    'In what year did British North America end slavery?',
-    'How many slaves did Harriet Tubman help escape through the underground railroad? 50-60, 60-70, 70-80, or 80+?',
-    'Harriet Tubman had a $40,000 bounty on her head, how much is that worth today?',
-    'What is reciprocity?',
-    'What were the first 4 provinces in Canada?',
-    'what network helped slaves escape to British North America?'
+let questions = []
+let answers = [
+    'C',
+    'B',
+    'D',
+    'A',
+    'C',
+    'C',
+    'B',
+    'D',
+    'B',
+    'B',
 ]
 
-let answers = [
-    // i have them on a doc
-    // i just need to paste it in
-]
+for (let i = 0; i < 10; i++) {
+    questions.push(new Image())
+}
+questions[-1] = new Image()
+questions[-1].src = 'Images/Back Card.png'
+for (let i = 0; i < questions.length; i++) {
+    questions[i].src = `Images/Card ${i}.png`
+}
+
+let currentQuestion = Math.floor(Math.random() * questions.length)
 
 class BoardTile {
     constructor(pre = null, next = null, type = null) {
@@ -132,12 +141,6 @@ class Player {
         this.pos = pos
         this.img = new Image()
         this.img.src = src
-    }
-    moveForward(num) {
-        this.pos += num
-    }
-    moveBackward(num) {
-        this.pos -= num
     }
 }
 
@@ -198,7 +201,7 @@ function drawBoard() {
 let board = []
 
 board[-1] = null
-for (let i = 0; i < 86; i++) {
+for (let i = 0; i < 56; i++) {
     board[i] = new BoardTile()
 }
 let tileTypesReference = []
@@ -210,21 +213,47 @@ for (let i of board) {
     i.next = board[board.indexOf(i)+1]
     i.type = tileTypes[tileTypesReference[Math.floor(Math.random() * tileTypesReference.length)]]
 }
-console.log(board)
-drawBoard()
+
+let redX = new Image()
+redX.src = 'Images/redX.png'
+let arrows = new Image()
+arrows.src = 'Images/Arrows.png'
 
 function run() {
     clear()
     drawRect(new Vector2(0, 0), new Vector2(canvas.width, canvas.height), 128, 128, 128, 1)
     drawBoard()
     drawImg(dice[die.state], new Vector2(0, 0), new Vector2(40, 40), new Vector2(canvas.width/2 - 50, canvas.height * 7/8 - 50), new Vector2(100, 100))
+    
     for (let player of players) {
+        if (player.pos >= board.length-1) {
+            player.pos = board.length-1
+        }
         drawImg(player.img, new Vector2(0, 0), new Vector2(12, 17), board[player.pos].pos, new Vector2(48, 68))
     }
-    if (turn != 0) {
+    drawImg(questions[currentQuestion], new Vector2(0, 0), new Vector2(192, 272), new Vector2(0, canvas.height - 272*1.25), new Vector2(192, 272).multiply(1.25))
+    if (!die.canRoll && (!die.rolling || !turn == 0)) {
+        drawImg(redX, new Vector2(0, 0), new Vector2(100, 100), new Vector2(canvas.width/2 - 50, canvas.height * 7/8 - 50), new Vector2(100, 100))
+    } else if (!die.rolling) {
+        drawImg(arrows, new Vector2(0, 0), new Vector2(100, 100), new Vector2(canvas.width/2 - 100, canvas.height * 7/8 - 100), new Vector2(200, 200))
+    }
+}
 
-    } else {
+function moveForward(player, num) {
+    if (num > 0){
+        player.pos++
+        setTimeout(moveForward, 200, player, num-1)
+    } else if (board[player.pos].type == tileTypes.water) {
+        setTimeout(moveBackward, 200, player, 1)
+    }
+}
 
+function moveBackward(player, num) {
+    if (num > 0){
+        player.pos--
+        setTimeout(moveBackward, 200, player, num-1)
+    } else if (board[player.pos].type == tileTypes.water) {
+        setTimeout(moveBackward, 200, player, 1)
     }
 }
 
@@ -232,6 +261,7 @@ setInterval(run, 1)
 
 function rollDice(t) {
     die.rolling = true
+    die.canRoll = false
     die.value = 0
     die.state = chooseNumber()
     if (t > 0) {
@@ -239,16 +269,32 @@ function rollDice(t) {
     } else {
         die.value = die.state
         die.rolling = false
-        if (true) {
-            players[turn].moveForward(die.value)
+        switch (board[players[turn].pos].type) {
+            case tileTypes.plains:
+                moveForward(players[turn], die.value)
+                break
+            case tileTypes.forest:
+                moveForward(players[turn], die.value - 1)
+                break
+            case tileTypes.tundra:
+                moveForward(players[turn], die.value - 2)
+                break
+            case tileTypes.water:
+                moveForward(players[turn], die.value)
+                break
         }
-        if (players[turn].pos > board.length - 1) {
+        if (players[turn].pos >= board.length - 1) {
             players[turn].pos = board.length - 1
             alert(`${players[turn].name} won!!!`)
         }
         turn++
         while (turn > 3) {
             turn -= 4
+        }
+        if (turn == 0) {
+            currentQuestion = Math.floor(Math.random() * questions.length)
+        } else {
+            setTimeout(rollDice, 500, 10)
         }
     }
 }
@@ -275,8 +321,74 @@ document.addEventListener("click", function(event) {
             mouse.y > canvas.height * 7/8 - 50
         )
     ) {
-        if (!die.rolling) {
+        if (!die.rolling && die.canRoll) {
             rollDice(10)
+        }
+    }
+    if (
+            mouse.y > canvas.height - 55
+            &&
+            mouse.y < canvas.height - 35
+            &&
+            currentQuestion != -1
+    ) {
+        if (
+                mouse.x > 40
+                &&
+                mouse.x < 60
+                &&
+                currentQuestion != -1
+        ) {
+            //A
+            if (answers[currentQuestion] == 'A') {
+                die.canRoll = true
+            } else {
+                turn++
+                rollDice(10)
+            }
+            currentQuestion = -1
+        }
+        if (
+            mouse.x > 84
+            &&
+            mouse.x < 104
+        ) {
+            //B
+            if (answers[currentQuestion] == 'B') {
+                die.canRoll = true
+            } else {
+                turn++
+                rollDice(10)
+            }
+            currentQuestion = -1
+        }
+        if (
+            mouse.x > 128
+            &&
+            mouse.x < 148
+        ) {
+            //C
+            if (answers[currentQuestion] == 'C') {
+                die.canRoll = true
+            } else {
+                turn++
+                rollDice(10)
+            }
+            currentQuestion = -1
+        }
+        if (
+            mouse.x > 172
+            &&
+            mouse.x < 192
+        ) {
+            //D
+            if (answers[currentQuestion] == 'D') {
+                die.canRoll = true
+            } else {
+                turn++
+                rollDice(10)
+            }
+            currentQuestion = -1
         }
     }
 })
