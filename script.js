@@ -36,13 +36,13 @@ let die = {
     canRoll: false
 }
 
-dice[0].src = `Images/0.png`
-dice[1].src = `Images/1.png`
-dice[2].src = `Images/2.png`
-dice[3].src = `Images/3.png`
-dice[4].src = `Images/4.png`
-dice[5].src = `Images/5.png`
-dice[6].src = `Images/6.png`
+dice[0].src = `https://kufbsrieewz.github.io/History/Images/0.png`
+dice[1].src = `https://kufbsrieewz.github.io/History/Images/1.png`
+dice[2].src = `https://kufbsrieewz.github.io/History/Images/2.png`
+dice[3].src = `https://kufbsrieewz.github.io/History/Images/3.png`
+dice[4].src = `https://kufbsrieewz.github.io/History/Images/4.png`
+dice[5].src = `https://kufbsrieewz.github.io/History/Images/5.png`
+dice[6].src = `https://kufbsrieewz.github.io/History/Images/6.png`
 
 function drawRect(pos, dim, r, g, b, a) {
     c.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`
@@ -119,9 +119,9 @@ for (let i = 0; i < 10; i++) {
     questions.push(new Image())
 }
 questions[-1] = new Image()
-questions[-1].src = 'Images/Back Card.png'
+questions[-1].src = 'https://kufbsrieewz.github.io/History/Images/Back Card.png'
 for (let i = 0; i < questions.length; i++) {
-    questions[i].src = `Images/Card ${i}.png`
+    questions[i].src = `https://kufbsrieewz.github.io/History/Images/Card ${i}.png`
 }
 
 let currentQuestion = Math.floor(Math.random() * questions.length)
@@ -158,10 +158,10 @@ let tileImgs = {
     water: new Image(),
 }
 
-tileImgs.plains.src = 'Images/tilePlains.png'
-tileImgs.forest.src = 'Images/tileForest.png'
-tileImgs.tundra.src = 'Images/tileTundra.png'
-tileImgs.water.src = 'Images/tileWater.png'
+tileImgs.plains.src = 'https://kufbsrieewz.github.io/History/Images/tilePlains.png'
+tileImgs.forest.src = 'https://kufbsrieewz.github.io/History/Images/tileForest.png'
+tileImgs.tundra.src = 'https://kufbsrieewz.github.io/History/Images/tileTundra.png'
+tileImgs.water.src = 'https://kufbsrieewz.github.io/History/Images/tileWater.png'
 
 function drawBoard() {
     const cols = 14
@@ -215,9 +215,9 @@ for (let i of board) {
 }
 
 let redX = new Image()
-redX.src = 'Images/redX.png'
+redX.src = 'https://kufbsrieewz.github.io/History/Images/redX.png'
 let arrows = new Image()
-arrows.src = 'Images/Arrows.png'
+arrows.src = 'https://kufbsrieewz.github.io/History/Images/Arrows.png'
 
 function run() {
     clear()
@@ -396,8 +396,8 @@ document.addEventListener("click", function(event) {
 let turn = 0
 
 let players = [
-    new Player('Player', 0, 'Images/YellowPawn.png'),
-    new Player('Alice', 0, 'Images/RedPawn.png'),
-    new Player('Bobby', 0, 'Images/GreenPawn.png'),
-    new Player('Claire', 0, 'Images/BluePawn.png')
+    new Player('Player', 0, 'https://kufbsrieewz.github.io/History/Images/YellowPawn.png'),
+    new Player('Alice', 0, 'https://kufbsrieewz.github.io/History/Images/RedPawn.png'),
+    new Player('Bobby', 0, 'https://kufbsrieewz.github.io/History/Images/GreenPawn.png'),
+    new Player('Claire', 0, 'https://kufbsrieewz.github.io/History/Images/BluePawn.png')
 ]
