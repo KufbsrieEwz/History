@@ -223,12 +223,13 @@ for (let i = 0; i < board.length; i++) {
     board[i].type = tileTypes[tileTypesReference[Math.floor(Math.random() * tileTypesReference.length)]]
     if (i > 3) {
         if (board[i].type == tileTypes.water && board[i-1].type == tileTypes.water && board[i-2].type == tileTypes.water && board[i-3].type == tileTypes.water) {
-            board[i].type = tileTypes.tundra
+            board[i-3].type = tileTypes.tundra
         }
     }
 }
 board[0].type = tileTypes.plains
 board[board.length-1].type = tileTypes.plains
+board[board.length] = {type: -1}
 
 let redX = new Image()
 redX.src = 'Images/redX.png'
@@ -341,7 +342,7 @@ function rollDice(t) {
         }
         if (turn == 0) {
             currentQuestion = Math.floor(Math.random() * questions.length)
-        } else if (Math.random() < 0.8) {
+        } else if (Math.random() < 0.5) {
             setTimeout(rollDice, 1000, 10)
         } else {
             turn++
