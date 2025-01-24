@@ -300,7 +300,6 @@ function rollDice(t) {
         setTimeout(rollDice, 50, t-1)
     } else {
         die.value = die.state
-        console.log(die.value)
         die.rolling = false
         switch (board[players[turn].pos].type) {
             case tileTypes.plains:
@@ -326,8 +325,18 @@ function rollDice(t) {
         }
         if (turn == 0) {
             currentQuestion = Math.floor(Math.random() * questions.length)
-        } else {
+        } else if (Math.random() < 0.8) {
             setTimeout(rollDice, 1000, 10)
+        } else {
+            turn++
+            while (turn > 3) {
+                turn -= 4
+            }
+            if (turn == 0) {
+                currentQuestion = Math.floor(Math.random() * questions.length)
+            } else {
+                setTimeout(rollDice, 1000, 10)
+            }
         }
     }
 }
