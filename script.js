@@ -36,13 +36,13 @@ let die = {
     canRoll: false
 }
 
-dice[0].src = `https://kufbsrieewz.github.io/History/Images/0.png`
-dice[1].src = `https://kufbsrieewz.github.io/History/Images/1.png`
-dice[2].src = `https://kufbsrieewz.github.io/History/Images/2.png`
-dice[3].src = `https://kufbsrieewz.github.io/History/Images/3.png`
-dice[4].src = `https://kufbsrieewz.github.io/History/Images/4.png`
-dice[5].src = `https://kufbsrieewz.github.io/History/Images/5.png`
-dice[6].src = `https://kufbsrieewz.github.io/History/Images/6.png`
+dice[0].src = `Images/0.png`
+dice[1].src = `Images/1.png`
+dice[2].src = `Images/2.png`
+dice[3].src = `Images/3.png`
+dice[4].src = `Images/4.png`
+dice[5].src = `Images/5.png`
+dice[6].src = `Images/6.png`
 
 function drawRect(pos, dim, r, g, b, a) {
     c.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`
@@ -97,10 +97,6 @@ function chooseNumber() {
     return Math.ceil(Math.random() * 6)
 }
 
-function askQuestion() {
-    return questions[Math.floor(Math.random() * questions.length)]
-}
-
 let questions = []
 let answers = [
     'C',
@@ -113,15 +109,25 @@ let answers = [
     'D',
     'B',
     'B',
+    'A',
+    'A',
+    'D',
+    'D',
+    'C',
+    'B',
+    'C',
+    'A',
+    'D',
+    'C',
 ]
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 20; i++) {
     questions.push(new Image())
 }
 questions[-1] = new Image()
-questions[-1].src = 'https://kufbsrieewz.github.io/History/Images/Back Card.png'
+questions[-1].src = 'Images/Back Card.png'
 for (let i = 0; i < questions.length; i++) {
-    questions[i].src = `https://kufbsrieewz.github.io/History/Images/Card ${i}.png`
+    questions[i].src = `Images/Card ${i}.png`
 }
 
 let currentQuestion = Math.floor(Math.random() * questions.length)
@@ -158,10 +164,10 @@ let tileImgs = {
     water: new Image(),
 }
 
-tileImgs.plains.src = 'https://kufbsrieewz.github.io/History/Images/tilePlains.png'
-tileImgs.forest.src = 'https://kufbsrieewz.github.io/History/Images/tileForest.png'
-tileImgs.tundra.src = 'https://kufbsrieewz.github.io/History/Images/tileTundra.png'
-tileImgs.water.src = 'https://kufbsrieewz.github.io/History/Images/tileWater.png'
+tileImgs.plains.src = 'Images/tilePlains.png'
+tileImgs.forest.src = 'Images/tileForest.png'
+tileImgs.tundra.src = 'Images/tileTundra.png'
+tileImgs.water.src = 'Images/tileWater.png'
 
 function drawBoard() {
     const cols = 14
@@ -169,6 +175,9 @@ function drawBoard() {
     const rows = Math.ceil(board.length / cols)
 
     for (let i = 0; i < board.length; i++) {
+        if (board[i].type == -1) {
+            continue
+        }
         const row = Math.floor(i / cols)
         const colInRow = i % cols
 
@@ -208,16 +217,25 @@ let tileTypesReference = []
 for (let i in tileTypes) {
     tileTypesReference.push(i)
 }
-for (let i of board) {
-    i.previous = board[board.indexOf(i)-1]
-    i.next = board[board.indexOf(i)+1]
-    i.type = tileTypes[tileTypesReference[Math.floor(Math.random() * tileTypesReference.length)]]
+for (let i = 0; i < board.length; i++) {
+    board[i].previous = board[i-1]
+    board[i].next = board[i+1]
+    board[i].type = tileTypes[tileTypesReference[Math.floor(Math.random() * tileTypesReference.length)]]
+    if (i > 4) {
+        if (board[i].type == tileTypes.water && board[i-1].type == tileTypes.water && board[i-2].type == tileTypes.water && board[i-3].type == tileTypes.water) {
+            board[i].type == tileTypes.tundra
+        }
+    }
 }
+board[0].type = tileTypes.plains
+board[board.length] = {type: -1}
 
 let redX = new Image()
-redX.src = 'https://kufbsrieewz.github.io/History/Images/redX.png'
+redX.src = 'Images/redX.png'
 let arrows = new Image()
-arrows.src = 'https://kufbsrieewz.github.io/History/Images/Arrows.png'
+arrows.src = 'Images/Arrows.png'
+let instructions = new Image()
+instructions.src = 'Images/instructions.png'
 
 function run() {
     clear()
@@ -237,12 +255,26 @@ function run() {
     } else if (!die.rolling) {
         drawImg(arrows, new Vector2(0, 0), new Vector2(100, 100), new Vector2(canvas.width/2 - 100, canvas.height * 7/8 - 100), new Vector2(200, 200))
     }
+    drawImg(instructions, new Vector2(0, 0), new Vector2(144, 78), new Vector2(canvas.width * 9/10, canvas.height * 9/10), new Vector2(canvas.width/10, canvas.height/10))
 }
 
 function moveForward(player, num) {
     if (num > 0){
         player.pos++
-        setTimeout(moveForward, 200, player, num-1)
+        switch (board[player.pos].type) {
+            case tileTypes.plains:
+                setTimeout(moveForward, 200, player, num - 1)
+                break
+            case tileTypes.forest:
+                setTimeout(moveForward, 200, player, num - 2)
+                break
+            case tileTypes.tundra:
+                setTimeout(moveForward, 200, player, num - 3)
+                break
+            case tileTypes.water:
+                setTimeout(moveForward, 200, player, num - 1)
+                break
+        }
     } else if (board[player.pos].type == tileTypes.water) {
         setTimeout(moveBackward, 200, player, 1)
     }
@@ -268,6 +300,7 @@ function rollDice(t) {
         setTimeout(rollDice, 50, t-1)
     } else {
         die.value = die.state
+        console.log(die.value)
         die.rolling = false
         switch (board[players[turn].pos].type) {
             case tileTypes.plains:
@@ -294,7 +327,7 @@ function rollDice(t) {
         if (turn == 0) {
             currentQuestion = Math.floor(Math.random() * questions.length)
         } else {
-            setTimeout(rollDice, 500, 10)
+            setTimeout(rollDice, 1000, 10)
         }
     }
 }
@@ -391,13 +424,16 @@ document.addEventListener("click", function(event) {
             currentQuestion = -1
         }
     }
+    if (mouse.x > canvas.width * 9/10 && mouse.y > canvas.height * 9/10) {
+        window.open('https://kufbsrieewz.github.io/History/instructions.txt')
+    }
 })
 
 let turn = 0
 
 let players = [
-    new Player('Player', 0, 'https://kufbsrieewz.github.io/History/Images/YellowPawn.png'),
-    new Player('Alice', 0, 'https://kufbsrieewz.github.io/History/Images/RedPawn.png'),
-    new Player('Bobby', 0, 'https://kufbsrieewz.github.io/History/Images/GreenPawn.png'),
-    new Player('Claire', 0, 'https://kufbsrieewz.github.io/History/Images/BluePawn.png')
+    new Player('Player', 0, 'Images/YellowPawn.png'),
+    new Player('Alice', 0, 'Images/RedPawn.png'),
+    new Player('Bobby', 0, 'Images/GreenPawn.png'),
+    new Player('Claire', 0, 'Images/BluePawn.png')
 ]
