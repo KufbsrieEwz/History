@@ -236,26 +236,42 @@ let arrows = new Image()
 arrows.src = 'Images/Arrows.png'
 let instructions = new Image()
 instructions.src = 'Images/instructions.png'
+let win = new Image()
+win.src = 'Images/Winner.png'
+let loss = new Image()
+loss.src = 'Images/Game Over.png'
+
+let gameState = -1
 
 function run() {
-    clear()
-    drawRect(new Vector2(0, 0), new Vector2(canvas.width, canvas.height), 128, 128, 128, 1)
-    drawBoard()
-    drawImg(dice[die.state], new Vector2(0, 0), new Vector2(40, 40), new Vector2(canvas.width/2 - 50, canvas.height * 7/8 - 50), new Vector2(100, 100))
-    
-    for (let player of players) {
-        if (player.pos >= board.length-1) {
-            player.pos = board.length-1
+    if (gameState == -1) {
+        clear()
+        drawRect(new Vector2(0, 0), new Vector2(canvas.width, canvas.height), 128, 128, 128, 1)
+        drawBoard()
+        drawImg(dice[die.state], new Vector2(0, 0), new Vector2(40, 40), new Vector2(canvas.width/2 - 50, canvas.height * 7/8 - 50), new Vector2(100, 100))
+        
+        for (let player of players) {
+            if (player.pos >= board.length-1) {
+                player.pos = board.length-1
+            }
+            drawImg(player.img, new Vector2(0, 0), new Vector2(12, 17), board[player.pos].pos, new Vector2(48, 68))
         }
-        drawImg(player.img, new Vector2(0, 0), new Vector2(12, 17), board[player.pos].pos, new Vector2(48, 68))
+        drawImg(questions[currentQuestion], new Vector2(0, 0), new Vector2(192, 272), new Vector2(0, canvas.height - 272*1.25), new Vector2(192, 272).multiply(1.25))
+        if (!die.canRoll && (!die.rolling || !turn == 0)) {
+            drawImg(redX, new Vector2(0, 0), new Vector2(100, 100), new Vector2(canvas.width/2 - 50, canvas.height * 7/8 - 50), new Vector2(100, 100))
+        } else if (!die.rolling) {
+            drawImg(arrows, new Vector2(0, 0), new Vector2(100, 100), new Vector2(canvas.width/2 - 100, canvas.height * 7/8 - 100), new Vector2(200, 200))
+        }
+        drawImg(instructions, new Vector2(0, 0), new Vector2(144, 78), new Vector2(canvas.width * 9/10, canvas.height * 9/10), new Vector2(canvas.width/10, canvas.height/10))
+    } else if (gameState == 0) {
+        clear()
+        drawRect(new Vector2(0, 0), new Vector2(canvas.width, canvas.height), 128, 128, 128, 1)
+        drawImg(loss, new Vector2(0, 0), new Vector2(240, 240), new Vector2(canvas.width/2 - 360, canvas.height/2 - 360), new Vector2(720, 720))
+    } else if (gameState == 1) {
+        clear()
+        drawRect(new Vector2(0, 0), new Vector2(canvas.width, canvas.height), 128, 128, 128, 1)
+        drawImg(win, new Vector2(0, 0), new Vector2(240, 240), new Vector2(canvas.width/2 - 360, canvas.height/2 - 360), new Vector2(720, 720))
     }
-    drawImg(questions[currentQuestion], new Vector2(0, 0), new Vector2(192, 272), new Vector2(0, canvas.height - 272*1.25), new Vector2(192, 272).multiply(1.25))
-    if (!die.canRoll && (!die.rolling || !turn == 0)) {
-        drawImg(redX, new Vector2(0, 0), new Vector2(100, 100), new Vector2(canvas.width/2 - 50, canvas.height * 7/8 - 50), new Vector2(100, 100))
-    } else if (!die.rolling) {
-        drawImg(arrows, new Vector2(0, 0), new Vector2(100, 100), new Vector2(canvas.width/2 - 100, canvas.height * 7/8 - 100), new Vector2(200, 200))
-    }
-    drawImg(instructions, new Vector2(0, 0), new Vector2(144, 78), new Vector2(canvas.width * 9/10, canvas.height * 9/10), new Vector2(canvas.width/10, canvas.height/10))
 }
 
 function moveForward(player, num) {
