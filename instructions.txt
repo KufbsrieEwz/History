@@ -1,9 +1,8 @@
-Start the Game:
-  1. Click the answer you think is correct on the trivia card!
-  2. If you got it correct you will be able to roll the die (by clicking it) to move forward; otherwise you will forfeit your turn and the game will progress without you!
-  3. Continue play until someone wins by getting to the last tile!
-Tiles:
-  1. Plains: Nothing! Just a normal / default tile!
-  2. Forest: Due to difficult terrain, you will move 1 tile slower than normal on this tile!
-  3. Tundra: Due to harsh terrain, you will move 2 tiles slower than normal on this tile!
-  4. Water: You cannot stop on this tile, you must either cross the entire body of water in one go or not cross it at all!
+1. Answer the questions: Click the answer you think is correct or press the corresponding key to try and gain a chance to roll!
+2. Roll the die: Click the die or press space while there are arrows around it to roll the die. You will move forward depending on what you roll!
+3. Continue play: Continue play until someone gets past the last tile, they are then deemed the winner!
+4. Tiles:
+  a. Plains: This is just a normal tile!
+  b. Forest: Due to difficult terrain, you will move slightly slower when travelling through this tile!
+  c. Tundra: Due to harsh terrain, you will move significantly slower than normal while travelling through this tile!
+  d. Water: You cannot stop on this tile, you must either cross the entire body of water in one go or not cross it at all!
