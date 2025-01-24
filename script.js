@@ -228,8 +228,7 @@ for (let i = 0; i < board.length; i++) {
     }
 }
 board[0].type = tileTypes.plains
-board[board.length-1] = tileTypes.plains
-board[board.length] = {type: -1}
+board[board.length-1].type = tileTypes.plains
 
 let redX = new Image()
 redX.src = 'Images/redX.png'
