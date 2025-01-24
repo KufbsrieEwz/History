@@ -221,9 +221,9 @@ for (let i = 0; i < board.length; i++) {
     board[i].previous = board[i-1]
     board[i].next = board[i+1]
     board[i].type = tileTypes[tileTypesReference[Math.floor(Math.random() * tileTypesReference.length)]]
-    if (i > 4) {
+    if (i > 3) {
         if (board[i].type == tileTypes.water && board[i-1].type == tileTypes.water && board[i-2].type == tileTypes.water && board[i-3].type == tileTypes.water) {
-            board[i].type == tileTypes.tundra
+            board[i].type = tileTypes.tundra
         }
     }
 }
@@ -451,6 +451,53 @@ document.addEventListener("click", function(event) {
     }
     if (mouse.x > canvas.width * 9/10 && mouse.y > canvas.height * 9/10) {
         window.open('https://kufbsrieewz.github.io/History/instructions.txt')
+    }
+})
+window.addEventListener('keypress', function(event) {
+    if (event.key == '1' || event.key == 'a') {
+        // A
+        if (answers[currentQuestion] == 'A') {
+            die.canRoll = true
+        } else {
+            turn++
+            rollDice(10)
+        }
+        currentQuestion = -1
+    }
+    if (event.key == '2' || event.key == 'b') {
+        // B
+        if (answers[currentQuestion] == 'B') {
+            die.canRoll = true
+        } else {
+            turn++
+            rollDice(10)
+        }
+        currentQuestion = -1
+    }
+    if (event.key == '3' || event.key == 'c') {
+        // C
+        if (answers[currentQuestion] == 'C') {
+            die.canRoll = true
+        } else {
+            turn++
+            rollDice(10)
+        }
+        currentQuestion = -1
+    }
+    if (event.key == '4' || event.key == 'd') {
+        // D
+        if (answers[currentQuestion] == 'D') {
+            die.canRoll = true
+        } else {
+            turn++
+            rollDice(10)
+        }
+        currentQuestion = -1
+    }
+    if (event.key == 'Enter' || event.key == ' ') {
+        if (!die.rolling && die.canRoll) {
+            rollDice(10)
+        }
     }
 })
 
